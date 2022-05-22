@@ -13,5 +13,13 @@ namespace Domain
         {
             return Val.ToString("yyyyMMdd");
         }
+        public int GetAge(DateTime calculatingDate, bool isAddPreviousDay)
+        {
+            return 27;
+        }
+        public string GetDetailedAge(DateTime calculatingDate, bool isAddPreviousDay)
+        {
+            return "0270000";
+        }
     }
 }

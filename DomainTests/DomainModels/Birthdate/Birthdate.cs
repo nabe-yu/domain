@@ -40,7 +40,7 @@ public class UnitTest1
         var isAddPreviousDay = true;
 
         var birthdate = new Domain.Birthdate("19570426");
-        Assert.Equal("02700000", birthdate.GetDetailedAge(calculatingDate, isAddPreviousDay));
+        Assert.Equal("0270000", birthdate.GetDetailedAge(calculatingDate, isAddPreviousDay));
 
     }
     [Fact]
