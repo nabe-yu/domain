@@ -4,33 +4,66 @@ namespace Domain
 {
     public class Birthdate
     {
-        public DateTime Val { get; }
+        private readonly DateTime _val;
+
         public Birthdate(string birhdateString)
         {
-            Val = DateTime.ParseExact(birhdateString, "yyyyMMdd", null);
+            _val = DateTime.ParseExact(birhdateString, "yyyyMMdd", null);
         }
+
         public override string ToString()
         {
-            return Val.ToString("yyyyMMdd");
+            return _val.ToString("yyyyMMdd");
         }
-        public int GetAge(DateTime calculatingDate, bool isAddPreviousDay)
-        {
-            var correctedCalculatingDate = calculatingDate.AddDays(isAddPreviousDay ? 1 : 0);
-            var age = correctedCalculatingDate.Year - Val.Year;
 
-            if (correctedCalculatingDate.Month < Val.Month)
+        /// <summary>
+        /// 生年月日から年齢を算出します。
+        /// </summary>
+        /// <param name="CalcDate">計算基準日</param>
+        /// <param name="isAddPreviousDay">誕生日の前日に年齢加算するか(民法第143条)</param>
+        /// <returns>年齢</returns>
+        public int GetAge(DateTime CalcDate, bool isAddPreviousDay)
+        {
+            var correctedCalcDate = CalcDate.AddDays(isAddPreviousDay ? 1 : 0);
+            var age = correctedCalcDate.Year - _val.Year;
+
+            if (correctedCalcDate.Month < _val.Month)
             {
                 return age - 1;
             }
-            if (correctedCalculatingDate.Month == Val.Month && correctedCalculatingDate.Day < Val.Day)
+            if (correctedCalcDate.Month == _val.Month && correctedCalcDate.Day < _val.Day)
             {
                 return age - 1;
             }
             return age;
         }
-        public string GetDetailedAge(DateTime calculatingDate, bool isAddPreviousDay)
+        /// <summary>
+        /// 生年月日から年齢日齢月齢を算出します。
+        /// </summary>
+        /// <param name="CalcDate">計算基準日</param>
+        /// <param name="isAddPreviousDay">誕生日の前日に年齢加算するか(民法第143条)</param>
+        /// <returns>年齢(3桁)月齢(2桁)日齢(2桁)</returns>
+        public string GetDetailedAge(DateTime CalcDate, bool isAddPreviousDay)
         {
-            return "0270000";
+            var correctedCalcDate = CalcDate.AddDays(isAddPreviousDay ? 1 : 0);
+
+            var yearAge = GetAge(CalcDate, isAddPreviousDay);
+            var latestYearBirthdate = _val.AddYears(yearAge);
+
+            var monthAge = (correctedCalcDate.Month + (correctedCalcDate.Year - latestYearBirthdate.Year) * 12) - latestYearBirthdate.Month;
+            if (correctedCalcDate.Day < latestYearBirthdate.Day)
+            {
+                monthAge--;
+            }
+
+            var latestMonthBirthdate = latestYearBirthdate.AddMonths(monthAge);
+            var diff = correctedCalcDate - latestMonthBirthdate;
+            var dayAge = (int)diff.TotalDays;
+
+            var yearString = yearAge.ToString().PadLeft(3, '0');
+            var monthString = monthAge.ToString().PadLeft(2, '0');
+            var dayString = dayAge.ToString().PadLeft(2, '0');
+            return $"{yearString}{monthString}{dayString}";
         }
     }
 }
