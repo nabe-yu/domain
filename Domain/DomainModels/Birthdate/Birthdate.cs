@@ -29,11 +29,11 @@ namespace Domain
 
             if (correctedCalcDate.Month < _val.Month)
             {
-                return age - 1;
+                return age--;
             }
             if (correctedCalcDate.Month == _val.Month && correctedCalcDate.Day < _val.Day)
             {
-                return age - 1;
+                return age--;
             }
             return age;
         }
