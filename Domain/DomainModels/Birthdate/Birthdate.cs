@@ -15,7 +15,18 @@ namespace Domain
         }
         public int GetAge(DateTime calculatingDate, bool isAddPreviousDay)
         {
-            return 27;
+            var correctedCalculatingDate = calculatingDate.AddDays(isAddPreviousDay ? 1 : 0);
+            var age = correctedCalculatingDate.Year - Val.Year;
+
+            if (correctedCalculatingDate.Month < Val.Month)
+            {
+                return age - 1;
+            }
+            if (correctedCalculatingDate.Month == Val.Month && correctedCalculatingDate.Day < Val.Day)
+            {
+                return age - 1;
+            }
+            return age;
         }
         public string GetDetailedAge(DateTime calculatingDate, bool isAddPreviousDay)
         {
