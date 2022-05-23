@@ -2,7 +2,7 @@ using System;
 
 namespace Domain
 {
-    public class Birthdate
+    public record Birthdate
     {
         private readonly DateTime _val;
 
@@ -19,12 +19,12 @@ namespace Domain
         /// <summary>
         /// 生年月日から年齢を算出します。
         /// </summary>
-        /// <param name="CalcDate">計算基準日</param>
+        /// <param name="calcDate">計算基準日</param>
         /// <param name="isAddPreviousDay">誕生日の前日に年齢加算するか(民法第143条)</param>
         /// <returns>年齢</returns>
-        public int GetAge(DateTime CalcDate, bool isAddPreviousDay)
+        public int GetAge(DateTime calcDate, bool isAddPreviousDay)
         {
-            var correctedCalcDate = CalcDate.AddDays(isAddPreviousDay ? 1 : 0);
+            var correctedCalcDate = calcDate.AddDays(isAddPreviousDay ? 1 : 0);
             var age = correctedCalcDate.Year - _val.Year;
 
             if (correctedCalcDate.Month < _val.Month)
